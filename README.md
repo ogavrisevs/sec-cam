@@ -45,13 +45,19 @@ Build
 Run local
 ----------
 
-    docker run -e "RUN_TIME=10" -e "AWS_ACCESS_KEY_ID=AK*****EA" -e "AWS_SECRET_ACCESS_KEY=E6******y" -e "STREAM_URL=https://stream-ire-alfa.dropcam.com/nexus_aac/62**********************de/playlist.m3u8" ogavrisevs/nestcam:0.3
+    docker run \
+      -e "AWS_ACCESS_KEY_ID=AK************OQ" \
+      -e "AWS_SECRET_ACCESS_KEY=V9**************************************0m" \
+      -e "BUCKET_SUB_FOLDER=18b43064ab85" \
+      -e "STREAM_URL=https://stream-ire-alfa.dropcam.com/nexus_aac/32********************************75/playlist.m3u8" \
+      --detach \
+      --restart always \
+       ogavrisevs/nestcam:latest
 
-Set up grafana google cloud
----------------------------
 
-  helm install stable/grafana
-  kubectl get secret --namespace default invinvible-rottweiler-grafana -o jsonpath="{.data.grafana-admin-password}" | base64 --decode ; echo
+Create Google container cluster
+---------------------------------
 
-
-  tyGl9DvrtG
+  gcloud config set project midyear-respect-167907
+  gcloud container clusters list
+  gcloud container clusters create cluster-1 --zone europe-west1-d --enable-kubernetes-alpha --num-nodes 2 --machine-type n1-standard-1 --max-nodes 2
