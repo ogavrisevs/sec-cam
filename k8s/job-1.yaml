@@ -1,0 +1,51 @@
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  name: nest-cam-cronjob-1
+  namespace: sec-cam
+spec:
+  schedule: "*/10 * * * *"
+  concurrencyPolicy: Replace
+  jobTemplate:
+    metadata:
+      name: nest-cam-job-1
+      labels:
+        app: nest-cam-job-1
+        loc: outside
+    spec:
+      parallelism: 1
+      completions: 10
+      template:
+        spec:
+          containers:
+          - name: nest-cam
+            image: ogavrisevs/nestcam
+            env:
+            - name: STREAM_URL
+              value: "https://stream-ire-alfa.dropcam.com/nexus_aac/62***********************de/playlist.m3u8"
+            - name: BUCKET_NAME
+              value: "sec-cam-history"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: nest-cam-tokens
+                  key: aws-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: nest-cam-tokens
+                  key: aws-sec-key
+            imagePullPolicy: Always
+            #resources:
+              #requests:
+              #  memory: "128Mi"
+              #  cpu: "250m"
+              #limits:
+              #  memory: "128Mi"
+              #  cpu: "250m"
+          restartPolicy: Never
+<<<<<<< HEAD:k8s/nest-cam-job.yaml
+          #nodeSelector:
+          #  node: slaves
+=======
+>>>>>>> 6d80429032cc5e56f91c2898e1c965996d7a638b:k8s/job-1.yaml
