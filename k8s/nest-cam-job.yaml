@@ -24,6 +24,8 @@ spec:
               value: "60"
             - name: STREAM_URL
               value: "https://stream-ire-alfa.dropcam.com/nexus_aac/62***********************de/playlist.m3u8"
+            - name: BUCKET_NAME
+              value: "sec-cam-history"
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -43,5 +45,5 @@ spec:
                 memory: "128Mi"
                 cpu: "100m"
           restartPolicy: Never
-          nodeSelector:
-            node: slaves
+          #nodeSelector:
+          #  node: slaves

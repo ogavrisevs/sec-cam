@@ -8,6 +8,7 @@ BUCKET_SUB_FOLDER="${BUCKET_SUB_FOLDER:-device-id}"
 export AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION:-eu-central-1}"
 export S3_USE_SIGV4="True"
 OUTPUT_DIR="${OUTPUT_DIR:-/home/vlc/to_cloud}"
+BUCKET_NAME="${OUTPUT_DIR:-sec-cam}"
 
 mkdir -p  $OUTPUT_DIR
 DATE=`date +%Y_%m_%d`
@@ -27,7 +28,7 @@ fi
 minimumsize=500000
 actualsize=$(wc -c <"${OUTPUT_DIR}/${FILE}")
 if [ $actualsize -ge $minimumsize ]; then
-  aws s3 cp $OUTPUT_DIR/$FILE s3://sec-cam/$BUCKET_SUB_FOLDER/$DATE/$FILE
+  aws s3 cp $OUTPUT_DIR/$FILE s3://$BUCKET_NAME/$BUCKET_SUB_FOLDER/$DATE/$FILE
 else
   echo "file size is less then $minimumsize bytes"
   exit 1

@@ -33,7 +33,6 @@ Run container
 
     docker run -it -v ~/work/sec-cam/out/:/home/vlc/ vlc https://stream-ire-alfa.dropcam.com/nexus_aac/62****************************de/playlist.m3u8 vlc://quit
 
-
 Build
 -------
 
@@ -45,4 +44,10 @@ Build
 Run local
 ----------
 
-    docker run -e "RUN_TIME=10" -e "AWS_ACCESS_KEY_ID=AK*****EA" -e "AWS_SECRET_ACCESS_KEY=E6******y" -e "STREAM_URL=https://stream-ire-alfa.dropcam.com/nexus_aac/62**********************de/playlist.m3u8" ogavrisevs/nestcam:0.3
+    docker run -d -e "RUN_TIME=180" -e "AWS_ACCESS_KEY_ID=AK****************OQ" -e "AWS_SECRET_ACCESS_KEY=V9**************************************0m" -e "STREAM_URL=https://stream-ire-alfa.dropcam.com/nexus_aac/32**********************75/playlist.m3u8" ogavrisevs/nestcam:latest
+
+Set up grafana google cloud
+---------------------------
+
+  helm install stable/grafana
+  kubectl get secret --namespace default invinvible-rottweiler-grafana -o jsonpath="{.data.grafana-admin-password}" | base64 --decode ; echo
