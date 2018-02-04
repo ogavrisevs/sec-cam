@@ -3,35 +3,43 @@
 # debug me
 set -x
 
-RUN_TIME="${RUN_TIME:-60}"
+RUN_TIME="${RUN_TIME:-10}"
 #18b4305042de, 18b43064ab85
+BUCKET="ams3.digitaloceanspaces.com"
+HOST_BUCKET="%(bucket)s.ams3.digitaloceanspaces.com"
 BUCKET_SUB_FOLDER="${BUCKET_SUB_FOLDER:-device-id}"
-export AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION:-eu-central-1}"
-export S3_USE_SIGV4="True"
 OUTPUT_DIR="${OUTPUT_DIR:-/home/vlc/to_cloud}"
-BUCKET_NAME="${OUTPUT_DIR:-sec-cam}"
 BUCKET_NAME="${BUCKET_NAME:-sec-cam}"
+minimumsize=100000
 
 mkdir -p  $OUTPUT_DIR
-DATE=`date +%Y_%m_%d`
-TIME=`date +%H_%M_%S`
 
-FILE="${DATE}_${TIME}.mp4"
+while :
+do
 
-/usr/bin/cvlc -v -I dummy --run-time=$RUN_TIME --stop-time=$RUN_TIME --marq-marquee="%Y-%m-%d %H:%M:%S" --marq-color=32768 --marq-refresh=100 --sout "#transcode{vcodec=mp4v,acodec=mp4a,sfilter=marq}:std{access=file,mux=mp4,dst=${OUTPUT_DIR}/${FILE}}" $STREAM_URL vlc://quit
+  DATE=`date +%Y_%m_%d`
+  TIME=`date +%H_%M_%S`
+  FILE="${DATE}_${TIME}.mp4"
 
-# Check file exists
-if [ ! -f "${OUTPUT_DIR}/${FILE}" ]; then
-    echo "File not found! :: ${OUTPUT_DIR}/${FILE} "
-    exit 1
-fi
+  ffmpeg -nostdin -i $STREAM_URL -t $RUN_TIME -c copy -bsf:a aac_adtstoasc ${OUTPUT_DIR}/${FILE}
+  ret=$?
+  if [ $ret -ne 0 ]; then
+    echo "Stream closed pause ."
+    sleep 30
+    continue
+  fi
 
-# Check file size
-minimumsize=500000
-actualsize=$(wc -c <"${OUTPUT_DIR}/${FILE}")
-if [ $actualsize -ge $minimumsize ]; then
-  aws s3 cp $OUTPUT_DIR/$FILE s3://$BUCKET_NAME/$BUCKET_SUB_FOLDER/$DATE/$FILE
-else
-  echo "file size is less then $minimumsize bytes"
-  exit 1
-fi
+  # Check file exists
+  if [ -f "${OUTPUT_DIR}/${FILE}" ]; then
+      # Check file size
+      actualsize=$(wc -c <"${OUTPUT_DIR}/${FILE}")
+      if [ $actualsize -ge $minimumsize ]; then
+        s3cmd --access_key=$ACCESS_KEY --secret_key=$SECRET_KEY  --host=$BUCKET --host-bucket=$HOST_BUCKET put $OUTPUT_DIR/$FILE s3://$BUCKET_NAME/$BUCKET_SUB_FOLDER/$DATE/$FILE
+      else
+        echo "File too small"
+        continue
+      fi
+      # remove file
+      rm $OUTPUT_DIR/$FILE
+  fi
+done
