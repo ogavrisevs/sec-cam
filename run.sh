@@ -4,13 +4,13 @@
 set -x
 
 RUN_TIME="${RUN_TIME:-10}"
-#18b4305042de, 18b43064ab85
 BUCKET="ams3.digitaloceanspaces.com"
 HOST_BUCKET="%(bucket)s.ams3.digitaloceanspaces.com"
 BUCKET_SUB_FOLDER="${BUCKET_SUB_FOLDER:-device-id}"
 OUTPUT_DIR="${OUTPUT_DIR:-/home/vlc/to_cloud}"
 BUCKET_NAME="${BUCKET_NAME:-sec-cam}"
 minimumsize=100000
+sleeptime=1
 
 mkdir -p  $OUTPUT_DIR
 
@@ -24,8 +24,8 @@ do
   ffmpeg -nostdin -i $STREAM_URL -t $RUN_TIME -c copy -bsf:a aac_adtstoasc ${OUTPUT_DIR}/${FILE}
   ret=$?
   if [ $ret -ne 0 ]; then
-    echo "Stream closed pause ."
-    sleep 30
+    echo "Stream closed, pausing : $sleeptime"
+    sleep $sleeptime
     continue
   fi
 

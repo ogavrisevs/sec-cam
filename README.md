@@ -2,9 +2,11 @@
 Stream Endpoints
 -----------------
 
-    rtmps://stream-ire-alfa.dropcam.com/nexus/62e26******************350874785de
-    https://stream-ire-alfa.dropcam.com/nexus_aac/62e262d*******785de/playlist.m3u8
-    https://stream-ire-alfa.dropcam.com/nexus_aac/32236e1*******8a875/playlist.m3u8
+    18b43064ab85
+    https://stream-eu1-charlie.dropcam.com:443/nexus_aac/12************58/playlist.m3u8?public=sDIhzEohqP
+    
+    641666de23a6
+    https://stream-eu1-bravo.dropcam.com/nexus_aac/32*****************75/playlist.m3u8?public=Lq8I8PL69l
 
 Media info
 -----------
@@ -15,28 +17,41 @@ Media info
 
 Build
 -------
+    
+    rsync -avzh /home/me/work-priv/sec-cam do:/root/
 
-    docker build -t ogavrisevs/nestcam:0.18 .
-    docker push ogavrisevs/nestcam:0.18
+    docker build -t ogavrisevs/nestcam:0.20 .
+    docker push ogavrisevs/nestcam:0.20
     docker build -t ogavrisevs/nestcam .
     docker push ogavrisevs/nestcam:latest
 
 Run local
 ----------
 
+    docker rm -f out-1
+    source secrets
     docker run \
     --detach \
     --restart=always \
-    -e "RUN_TIME=180" \
-    -e "ACCESS_KEY=AK****************OQ" \
-    -e "SECRET_KEY=V9**************************************0m" \
-    -e "STREAM_URL=https://stream-ire-alfa.dropcam.com/nexus_aac/32**********************75/playlist.m3u8" \ ogavrisevs/nestcam:latest
+    --name out-1 \
+    -e "RUN_TIME=600" \
+    -e "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" \
+    -e "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \
+    -e "BUCKET_SUB_FOLDER=18b43064ab85" \
+    -e "STREAM_URL=$STREAM1" \
+    ogavrisevs/nestcam:0.20
 
-Set up grafana google cloud
----------------------------
+   docker run \
+    --detach \
+    --restart=always \
+    --name out-2 \
+    -e "RUN_TIME=600" \
+    -e "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" \
+    -e "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \
+    -e "BUCKET_SUB_FOLDER=641666de23a6" \
+    -e "STREAM_URL=$STREAM2" \
+    ogavrisevs/nestcam:0.20
 
-  helm install stable/grafana
-  kubectl get secret --namespace default invinvible-rottweiler-grafana -o jsonpath="{.data.grafana-admin-password}" | base64 --decode ; echo
 
 Create Google container cluster
 ---------------------------------
