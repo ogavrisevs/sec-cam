@@ -53,8 +53,3 @@ Run local
     ogavrisevs/nestcam:0.20
 
 
-Create Google container cluster
----------------------------------
-  gcloud config set project midyear-respect-167907
-  gcloud container clusters list
-  gcloud container clusters create cluster-1 --zone europe-west1-d --enable-kubernetes-alpha --num-nodes 2 --machine-type n1-standard-1 --max-nodes 2
