@@ -42,4 +42,5 @@ do
       # remove file
       rm $OUTPUT_DIR/$FILE
   fi
+  rm -rfv $OUTPUT_DIR/*
 done
