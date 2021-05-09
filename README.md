@@ -18,7 +18,7 @@ Media info
 Build
 -------
 
-    rsync -avzh /home/me/work-priv/sec-cam do:/home/ubuntu
+    rsync -avzh /Users/me/work-priv/sec-cam do:/home/ubuntu
 
     docker build -t ogavrisevs/nestcam:0.22 .
     docker push ogavrisevs/nestcam:0.22
@@ -56,3 +56,26 @@ Run local
     -e "BUCKET_SUB_FOLDER=641666de23a6" \
     -e "STREAM_URL=$STREAM2" \
     ogavrisevs/nestcam:0.22
+
+
+Install postfix
+-----------------
+
+    apt-get install postfix
+
+Install rclone
+-----------------
+
+    curl https://rclone.org/install.sh | sudo bash
+
+    vim ~/.config/rclone/rclone.conf
+
+    [do]
+    type = s3
+    env_auth = false
+    access_key_id = XE**************XS
+    secret_access_key = 8s****************************vY
+    endpoint = ams3.digitaloceanspaces.com
+    acl = private
+    
+    rclone size do:sec-cam --include "18b43064ab85/2021_05_08/**" --json

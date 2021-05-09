@@ -1,0 +1,21 @@
+#!/bin/bash
+# debug me
+set -x
+
+CAM1="18b43064ab85" 
+CAM2="641666de23a6" 
+DATE=`date +%Y_%m_%d -d '1 day ago'`
+EMAIL_TO="kenny13@gmail.com"
+
+sendEmail () {
+    echo "Subject: No files from cam" > message
+    TREE=`rclone tree do:sec-cam --level 2`
+    echo $TREE >> message
+    /usr/sbin/sendmail $EMAIL_TO < message
+}
+
+BYTES_CAM1=`rclone size do:sec-cam --include "$CAM1/$DATE/**" --json |  jq  ".bytes"`
+BYTES_CAM2=`rclone size do:sec-cam --include "$CAM2/$DATE/**" --json |  jq  ".bytes"`
+
+if [[ $BYTES_CAM1 -eq 0 ]]; then sendEmail; fi
+if [[ $BYTES_CAM2 -eq 0 ]]; then sendEmail; fi
