@@ -1,13 +1,3 @@
-
-Stream Endpoints
------------------
-
-    18b43064ab85 - priekssa
-    https://stream-eu1-charlie.dropcam.com/nexus_aac/32236e1a18974e3abebdf1eb93f8a875/playlist.m3u8?public=Lq8I8PL69l
-
-    641666de23a6 - terase
-    https://stream-eu1-charlie.dropcam.com/nexus_aac/121b3e6f27c64665ab49669d8a794558/playlist.m3u8?public=sDIhzEohqP
-
 Media info
 -----------
 
@@ -20,8 +10,8 @@ Build
 
     rsync -avzh /Users/me/work-priv/sec-cam do:/home/ubuntu
 
-    docker build -t ogavrisevs/nestcam:0.22 .
-    docker push ogavrisevs/nestcam:0.22
+    docker build -t ogavrisevs/nestcam:25 .
+    docker push ogavrisevs/nestcam:25
     docker build -t ogavrisevs/nestcam:latest .
     docker push ogavrisevs/nestcam:latest
 
@@ -41,7 +31,7 @@ Run local
     -e "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \
     -e "BUCKET_SUB_FOLDER=18b43064ab85" \
     -e "STREAM_URL=$STREAM1" \
-    ogavrisevs/nestcam:0.22
+    ogavrisevs/nestcam:25
 
    docker rm -f out-2
    docker run \
@@ -55,7 +45,7 @@ Run local
     -e "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \
     -e "BUCKET_SUB_FOLDER=641666de23a6" \
     -e "STREAM_URL=$STREAM2" \
-    ogavrisevs/nestcam:0.22
+    ogavrisevs/nestcam:25
 
 
 Install postfix
@@ -79,3 +69,8 @@ Install rclone
     acl = private
     
     rclone size do:sec-cam --include "18b43064ab85/2021_05_08/**" --json
+
+    rclone serve http  do: --addr 138.197.181.219:8182 --htpasswd htpasswd
+
+    rclone delete do: --max-age 30
+    rclone rmdir do: --max-age 30

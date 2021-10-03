@@ -12,6 +12,10 @@ COPY run.sh /run.sh
 
 RUN  chmod 760 /run.sh
 
+ENV TZ=Europe/Riga
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 WORKDIR /
 
 CMD  ./run.sh

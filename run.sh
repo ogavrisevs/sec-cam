@@ -24,7 +24,7 @@ do
   ffmpeg -nostdin -i $STREAM_URL -t $RUN_TIME -c copy -bsf:a aac_adtstoasc ${OUTPUT_DIR}/${FILE}
   ret=$?
   if [ $ret -ne 0 ]; then
-    echo "Stream closed, pausing : $sleeptime"
+    echo "[`date +%Y_%m_%d-%H_%M_%S`] Stream closed, pausing : $sleeptime"
     sleep $sleeptime
     continue
   fi
